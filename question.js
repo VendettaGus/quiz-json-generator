@@ -11,7 +11,7 @@ document.getElementById("export-json").addEventListener("click", exportJSON);
 function addAnswerField() {
   const container = document.getElementById("answers-container");
   const label = document.createElement("label");
-  label.textContent = `${container.childElementCount / 2 + 1}. Ответ:`; // Вычисляем номер ответа
+  label.textContent = `${container.childElementCount / 2 + 1}. Ответ:`;
   const input = document.createElement("input");
   input.type = "text";
   input.id = `answer${container.childElementCount / 2 + 1}`;
@@ -24,8 +24,8 @@ function addAnswerField() {
 function removeAnswerField() {
   if (answerCount > 2) {
     const container = document.getElementById("answers-container");
-    container.removeChild(container.lastChild); // Удалить input
-    container.removeChild(container.lastChild); // Удалить label
+    container.removeChild(container.lastChild);
+    container.removeChild(container.lastChild);
     answerCount--;
   } else {
     alert("Должно быть хотя бы два варианта ответа.");
@@ -76,11 +76,10 @@ function clearFields() {
   document.getElementById("correct").value = "";
   const container = document.getElementById("answers-container");
   container.innerHTML = "";
-  answerCount = 0; // Сброс глобального счётчика
+  answerCount = 0;
   for (let i = 0; i < 4; i++) {
-    addAnswerField(); // Добавляем поля с правильной нумерацией
+    addAnswerField();
   }
 }
 
-// Инициализация с 4 ответами
 clearFields();
