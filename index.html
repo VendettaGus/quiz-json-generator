@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Генератор JSON для викторины</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Генератор JSON для викторины</h1>
+  <label>Вопрос:</label>
+  <input type="text" id="question" placeholder="Введите вопрос">
+  
+  <div id="answers-container">
+    <!-- Поля ответов будут добавляться сюда -->
+  </div>
+  
+  <button id="add-answer">Добавить ответ</button>
+  <button id="remove-answer">Удалить ответ</button>
+  
+  <label>Правильный ответ (номер):</label>
+  <input type="number" id="correct" min="1" placeholder="Введите номер правильного ответа">
+
+  <button id="add-question">Добавить вопрос</button>
+  <button id="generate-json">Сгенерировать JSON</button>
+  <button id="export-json">Скачать JSON</button>
+
+  <h2>Сгенерированный JSON:</h2>
+  <textarea id="output" readonly></textarea>
+
+  <script src="question.js"></script>
+</body>
+</html>
