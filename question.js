@@ -64,6 +64,7 @@ function addQuestion() {
   clearFields();
 }
 
+
 function generateJSON() {
   const output = document.getElementById("output");
   output.value = JSON.stringify(questions, null, 2);
