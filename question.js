@@ -1,5 +1,5 @@
 const questions = [];
-let answerCount = 4; // По умолчанию 4 варианта ответа
+let answerCount = 0;
 
 // Обработчики событий
 document.getElementById("add-answer").addEventListener("click", addAnswerField);
@@ -19,16 +19,16 @@ function addAnswerField() {
   container.appendChild(label);
   container.appendChild(input);
   answerCount++;
+  updateCorrectFieldState();
 }
 
 function removeAnswerField() {
-  if (answerCount > 2) {
+  if (answerCount > 1) {
     const container = document.getElementById("answers-container");
     container.removeChild(container.lastChild);
     container.removeChild(container.lastChild);
     answerCount--;
-  } else {
-    alert("Должно быть хотя бы два варианта ответа.");
+    updateCorrectFieldState();
   }
 }
 
@@ -36,6 +36,7 @@ function addQuestion() {
   const question = document.getElementById("question").value.trim();
   const answers = [];
   const container = document.getElementById("answers-container");
+
   for (let i = 1; i <= container.childElementCount / 2; i++) {
     const answer = document.getElementById(`answer${i}`)?.value.trim();
     if (answer) {
@@ -45,14 +46,16 @@ function addQuestion() {
       return;
     }
   }
-  const correct = parseInt(document.getElementById("correct").value);
 
-  if (!question || isNaN(correct) || correct < 1 || correct > answers.length) {
+  const correct = document.getElementById("correct").value;
+  const correctIndex = parseInt(correct) - 1;
+
+  if (!question || (answers.length > 1 && (isNaN(correctIndex) || correctIndex < 0 || correctIndex >= answers.length))) {
     alert("Пожалуйста, заполните все поля корректно.");
     return;
   }
 
-  questions.push({ question, answers, correct: correct - 1 });
+  questions.push({ question, answers, correct: answers.length > 1 ? correctIndex : 0 });
   alert("Вопрос добавлен!");
   clearFields();
 }
@@ -82,4 +85,15 @@ function clearFields() {
   }
 }
 
+function updateCorrectFieldState() {
+  const correctField = document.getElementById("correct");
+  if (answerCount === 1) {
+    correctField.value = "1";
+    correctField.disabled = true;
+  } else {
+    correctField.disabled = false;
+  }
+}
+
+// Инициализация
 clearFields();
