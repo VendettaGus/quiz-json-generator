@@ -8,26 +8,38 @@
 </head>
 <body>
   <h1>Генератор JSON для викторины</h1>
+
+  <!-- Поле для ввода вопроса -->
   <label>Вопрос:</label>
   <input type="text" id="question" placeholder="Введите вопрос">
-  
+
+  <!-- Контейнер для ответов -->
   <div id="answers-container">
     <!-- Поля ответов будут добавляться сюда -->
   </div>
-  
+
+  <!-- Кнопки управления полями ответа -->
   <button id="add-answer">Добавить ответ</button>
   <button id="remove-answer">Удалить ответ</button>
-  
+
+  <!-- Контейнер для списка добавленных вопросов -->
+  <div id="questions-list"></div>
+
+  <!-- Поле для ввода номера правильного ответа -->
   <label>Правильный ответ (номер):</label>
   <input type="number" id="correct" min="1" placeholder="Введите номер правильного ответа">
 
-  <button id="add-question">Добавить вопрос</button>
+  <!-- Кнопки для добавления вопросов и генерации JSON -->
+  <button id="toggle-questions">Свернуть список вопросов</button>
+  <button id="add-question">Добавить вопрос в JSON</button>
   <button id="generate-json">Сгенерировать JSON</button>
   <button id="export-json">Скачать JSON</button>
 
+  <!-- Поле для отображения сгенерированного JSON -->
   <h2>Сгенерированный JSON:</h2>
   <textarea id="output" readonly></textarea>
 
+  <!-- Подключение JS -->
   <script src="question.js"></script>
 </body>
 </html>

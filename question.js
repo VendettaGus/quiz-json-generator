@@ -1,5 +1,6 @@
 const questions = [];
-let answerCount = 0;
+let answerCount = 1; // Начальное количество полей для ответов
+let isListCollapsed = false; // Состояние списка вопросов (свёрнут/развёрнут)
 
 // Обработчики событий
 document.getElementById("add-answer").addEventListener("click", addAnswerField);
@@ -7,35 +8,30 @@ document.getElementById("remove-answer").addEventListener("click", removeAnswerF
 document.getElementById("add-question").addEventListener("click", addQuestion);
 document.getElementById("generate-json").addEventListener("click", generateJSON);
 document.getElementById("export-json").addEventListener("click", exportJSON);
+document.getElementById("toggle-questions").addEventListener("click", toggleQuestionsList);
 
 function addAnswerField() {
   const container = document.getElementById("answers-container");
-
-  // Создание метки для ответа
   const label = document.createElement("label");
   label.textContent = `${container.childElementCount / 2 + 1}. Ответ:`;
-
-  // Создание многострочного поля
-  const textarea = document.createElement("textarea");
-  textarea.id = `answer${container.childElementCount / 2 + 1}`;
-  textarea.placeholder = "Введите ответ (можно несколько строк)";
-  textarea.rows = 2; // Количество строк по умолчанию
-  textarea.style.resize = "vertical"; // Позволяет пользователю изменять высоту поля
-
-  // Добавление метки и текстового поля в контейнер
+  const input = document.createElement("textarea");
+  input.id = `answer${container.childElementCount / 2 + 1}`;
+  input.placeholder = "Введите ответ";
   container.appendChild(label);
-  container.appendChild(textarea);
-
+  container.appendChild(input);
   answerCount++;
+  toggleCorrectField();
 }
 
 function removeAnswerField() {
   if (answerCount > 1) {
     const container = document.getElementById("answers-container");
-    container.removeChild(container.lastChild);
-    container.removeChild(container.lastChild);
+    container.removeChild(container.lastChild); // Удаляем input
+    container.removeChild(container.lastChild); // Удаляем label
     answerCount--;
-    updateCorrectFieldState();
+    toggleCorrectField();
+  } else {
+    alert("Должен быть хотя бы один вариант ответа.");
   }
 }
 
@@ -54,23 +50,24 @@ function addQuestion() {
     }
   }
 
-  // Если есть только один ответ, добавляем без поля "correct"
-  if (answers.length === 1) {
-    questions.push({ question, answers });
-  } else {
-    const correct = parseInt(document.getElementById("correct").value);
-    if (!question || isNaN(correct) || correct < 1 || correct > answers.length) {
-      alert("Пожалуйста, заполните все поля корректно.");
-      return;
-    }
+  const correctInput = document.getElementById("correct");
+  const correct = answers.length > 1 ? parseInt(correctInput.value) : null;
 
-    questions.push({ question, answers, correct: correct - 1 });
+  if (!question || (answers.length > 1 && (isNaN(correct) || correct < 1 || correct > answers.length))) {
+    alert("Пожалуйста, заполните все поля корректно.");
+    return;
   }
 
+  const newQuestion = { question, answers };
+  if (answers.length > 1) {
+    newQuestion.correct = correct - 1;
+  }
+
+  questions.push(newQuestion);
   alert("Вопрос добавлен!");
   clearFields();
+  displayQuestions();
 }
-
 
 function generateJSON() {
   const output = document.getElementById("output");
@@ -92,19 +89,75 @@ function clearFields() {
   const container = document.getElementById("answers-container");
   container.innerHTML = "";
   answerCount = 0;
-  for (let i = 0; i < 4; i++) {
-    addAnswerField();
-  }
+  addAnswerField();
+  toggleCorrectField();
 }
 
-function updateCorrectFieldState() {
+function toggleCorrectField() {
   const correctField = document.getElementById("correct");
-  if (answerCount === 1) {
-    correctField.value = "1";
-    correctField.disabled = true;
+  correctField.disabled = answerCount === 1;
+}
+
+function displayQuestions() {
+  const list = document.getElementById("questions-list");
+  list.innerHTML = ""; // Очищаем список перед обновлением
+
+  questions.forEach((q, index) => {
+    const questionItem = document.createElement("div");
+    questionItem.classList.add("question-item");
+    questionItem.style.border = "1px solid #ddd";
+    questionItem.style.padding = "10px";
+    questionItem.style.marginBottom = "10px";
+    questionItem.style.borderRadius = "5px";
+
+    const questionText = document.createElement("p");
+    questionText.textContent = `Вопрос ${index + 1}: ${q.question}`;
+    questionItem.appendChild(questionText);
+
+    const answersText = document.createElement("p");
+    answersText.textContent = `Ответы: ${q.answers.join(", ")}`;
+    questionItem.appendChild(answersText);
+
+    if (q.correct !== undefined) {
+      const correctText = document.createElement("p");
+      correctText.textContent = `Правильный ответ: ${q.correct + 1}`;
+      questionItem.appendChild(correctText);
+    }
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Удалить";
+    deleteButton.style.backgroundColor = "#f44336";
+    deleteButton.style.color = "white";
+    deleteButton.style.border = "none";
+    deleteButton.style.padding = "5px 10px";
+    deleteButton.style.cursor = "pointer";
+    deleteButton.style.borderRadius = "3px";
+    deleteButton.addEventListener("click", () => deleteQuestion(index));
+
+    questionItem.appendChild(deleteButton);
+    list.appendChild(questionItem);
+  });
+}
+
+function deleteQuestion(index) {
+  questions.splice(index, 1);
+  displayQuestions();
+  generateJSON();
+}
+
+function toggleQuestionsList() {
+  const list = document.getElementById("questions-list");
+  const toggleButton = document.getElementById("toggle-questions");
+
+  if (isListCollapsed) {
+    list.style.display = "block";
+    toggleButton.textContent = "Свернуть список вопросов";
   } else {
-    correctField.disabled = false;
+    list.style.display = "none";
+    toggleButton.textContent = "Развернуть список вопросов";
   }
+
+  isListCollapsed = !isListCollapsed;
 }
 
 // Инициализация
