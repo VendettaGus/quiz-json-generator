@@ -47,15 +47,19 @@ function addQuestion() {
     }
   }
 
-  const correct = document.getElementById("correct").value;
-  const correctIndex = parseInt(correct) - 1;
+  // Если есть только один ответ, добавляем без поля "correct"
+  if (answers.length === 1) {
+    questions.push({ question, answers });
+  } else {
+    const correct = parseInt(document.getElementById("correct").value);
+    if (!question || isNaN(correct) || correct < 1 || correct > answers.length) {
+      alert("Пожалуйста, заполните все поля корректно.");
+      return;
+    }
 
-  if (!question || (answers.length > 1 && (isNaN(correctIndex) || correctIndex < 0 || correctIndex >= answers.length))) {
-    alert("Пожалуйста, заполните все поля корректно.");
-    return;
+    questions.push({ question, answers, correct: correct - 1 });
   }
 
-  questions.push({ question, answers, correct: answers.length > 1 ? correctIndex : 0 });
   alert("Вопрос добавлен!");
   clearFields();
 }
