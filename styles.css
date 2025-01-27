@@ -1,16 +1,16 @@
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
-  }
-  
-  input, button, textarea {
-    margin-bottom: 10px;
-    width: 100%;
-  }
-  
-  textarea {
-    height: 150px;
-  }
-  
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+input, button, textarea {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+textarea {
+  height: 50px;
+  resize: none;
+}
