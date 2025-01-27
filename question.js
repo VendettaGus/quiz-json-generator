@@ -10,16 +10,23 @@ document.getElementById("export-json").addEventListener("click", exportJSON);
 
 function addAnswerField() {
   const container = document.getElementById("answers-container");
+
+  // Создание метки для ответа
   const label = document.createElement("label");
   label.textContent = `${container.childElementCount / 2 + 1}. Ответ:`;
-  const input = document.createElement("input");
-  input.type = "text";
-  input.id = `answer${container.childElementCount / 2 + 1}`;
-  input.placeholder = "Введите ответ";
+
+  // Создание многострочного поля
+  const textarea = document.createElement("textarea");
+  textarea.id = `answer${container.childElementCount / 2 + 1}`;
+  textarea.placeholder = "Введите ответ (можно несколько строк)";
+  textarea.rows = 2; // Количество строк по умолчанию
+  textarea.style.resize = "vertical"; // Позволяет пользователю изменять высоту поля
+
+  // Добавление метки и текстового поля в контейнер
   container.appendChild(label);
-  container.appendChild(input);
+  container.appendChild(textarea);
+
   answerCount++;
-  updateCorrectFieldState();
 }
 
 function removeAnswerField() {
